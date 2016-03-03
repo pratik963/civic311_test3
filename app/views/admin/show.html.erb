@@ -1,0 +1,57 @@
+ <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+<br/>
+<div class='page-header'>
+<h1>Details for <%= params[:name].titleize %> '<%= params[:id] %>'</h1>
+</div>
+
+<ol class="breadcrumb"><li class="false"><a class="pjax" href="/admin/dashboard/">Dashboard</a></li><li class="false"><%= link_to "#{params[:name].titleize}", root_path(:param1 => "#{params[:name]}"), :class => "pjax" %></li><li class="active"><%= params[:id] %></li></ol>
+<ul class='nav nav-tabs'>	
+          <li title="" rel="" class="icon show_member_link active">
+            <%= link_to '<i class="glyphicon glyphicon-info-sign"></i>'.html_safe, "#", :class => "pjax" %>
+          </li>        
+          <li title="" rel="" class="icon edit_member_link ">
+			<%= link_to '<i class="glyphicon glyphicon-pencil"></i>'.html_safe, "#", :class => "pjax" %>
+          </li>
+        
+          <li title="" rel="" class="icon delete_member_link ">
+            <%= link_to '<i class="glyphicon glyphicon-remove"></i>'.html_safe, "#", method: :delete, data: { confirm: 'Are you sure?' }, :class => "pjax" %>              
+          </li>
+        
+          <li title="" rel="" class="icon show_in_app_member_link ">
+           <%= link_to '<i class="glyphicon glyphicon-circle-arrow-left"></i>'.html_safe, "#", :class => "pjax"  %>              
+          </li>
+</ul>
+
+<%
+@column_name = []
+   
+ActiveRecord::Base.connection.columns(params[:name]).each { |c|	
+  	@column_name << c.name}
+
+@column_data = ActiveRecord::Base.connection.execute("SELECT * FROM #{params[:name]} where id = '#{params[:id]}'").to_a 
+
+%>
+
+
+<div class='fieldset'>
+<h4>
+Basic info
+</h4>
+<dl>
+	<% @column_name.zip(@column_data[0]).each do |cname, cvalue| %>
+	<dt>
+		<span class='label label-info'>
+  			<%= cname.titleize %>
+		</span>
+	</dt>
+	<dd class='well'>
+      <% if cvalue.kind_of?(Date) || cvalue.kind_of?(Time)%>
+        <%= cvalue.strftime("%B %d, %Y %H:%M") %>
+      <% else %>
+        <%= cvalue %>
+      <% end %>
+	</dd>
+	<% end %>
+</dl>
+</div>

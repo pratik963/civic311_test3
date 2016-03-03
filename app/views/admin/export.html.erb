@@ -1,0 +1,64 @@
+<br/><br/><br/>
+
+<fieldset id='fields_to_export'>
+	<legend>
+		<h2>Select fields to export</h2>
+	</legend>
+	
+	<div class='form-group control-group col-sm-12'>
+		<div class='controls'>
+			<div class='col-sm-12'></div>
+			<label class='col-sm-12 checkbox' for='check_all'>
+				<%= check_box_tag "check_all", 'yes', false, :class => "check_all" %>
+				Select All Fields
+			</label>
+		</div>
+	</div>
+</fieldset>
+
+<form action="<%= export_sel_fields_admin_index_path %>" target="_blank">
+<div class='form-group control-group col-sm-12' id='div_export_model_fields' >	
+	<% @model_field.each do |model_name, model_fields|  %>
+		<% if model_name != 'association' %>
+			<label class='col-sm-12 well control-label' data-original-title='Click to reverse selection' onclick='jQuery(this).siblings(".controls").find("input").click()' rel='tooltip'>Fields from <%= model_name.pluralize %></label>
+			<div class='col-sm-11 col-sm-offset-1 controls'>
+				<% model_fields.each do |field_name|  %>
+					<label class='checkbox col-sm-3'>					
+						<%= check_box_tag "#{model_name}[#{field_name}]", {}, false, :class => "check_row", :data => {:model_name => model_name, :field_name => field_name } %> <%= field_name %>
+					</label>
+				<% end %>
+			</div>
+		<% else %>
+		<div class='col-sm-12'>
+			<% @model_field['association'].each do |a_model_name, a_model_fields|  %>
+				<label class='col-sm-12 well control-label' data-original-title='Click to reverse selection' onclick='jQuery(this).siblings(".controls").find("input").click()' rel='tooltip'>Fields from associated <%= a_model_name.humanize.downcase %></label>
+				<div class="col-sm-offset-1 controls">
+				<% a_model_fields.each do |a_field_name|  %>
+					<label class='checkbox col-sm-3'>
+						<%= check_box_tag "#{a_model_name}[#{a_field_name}]", {}, false, :class => "check_row", :data => {:model_name => a_model_name, :field_name => a_field_name} %> <%= a_field_name %>
+					</label>
+				<% end %>
+				</div>
+			<% end %>
+		</div>
+		<% end %>
+	<% end %>
+ 			
+</div>
+
+<br/> 
+<div class='form-group form-actions'>
+	<div class='col-sm-offset-2 col-sm-10'>
+		<% modeln = params[:param1].present? ? params[:param1].classify : @temp_table[0][:table_name].classify %>
+		<%= link_to "Export to csv",  "", :data => { :model_name =>  modeln, :main_modal_name => modeln, :export_url => export_sel_fields_admin_index_path }, :id => "export_csv", class: "btn btn-primary" %>
+			
+				
+		<%= link_to "Cancel", :back , class: "btn btn-default" %>
+		<%#= link_to_function "Cancel", "history.back()", class: "btn btn-default" %>
+
+		<div style="padding:10px;">
+	</div>
+</div>
+
+</form>
+

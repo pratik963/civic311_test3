@@ -1,0 +1,25 @@
+<br/><br/>
+<h2>Edit <%= params[:param2].titleize %></h2>
+<ol class="breadcrumb"><li class="active"><a class="pjax" href="/admin/dashboard/">Dashboard</a> / <%= link_to "#{params[:param2].titleize}", root_path(:param1 => "#{params[:param2]}"), :class => "pjax" %> / Edit</li></ol>
+
+	
+<%= form_for params[:param2], :url => url_for(:controller => 'admin', :action => 'update'), :method => "patch" do |f| %>
+
+	<div class="form-group control-group" >
+
+		<%= render :partial => "admin/form", :locals=>{:f=>f} %>
+
+		<div class="actions col-sm-10 controls" style="margin-left:20%;">
+			<input class="btn btn-primary size_btn" name="commit" type="submit" value="Save" />	
+			<a class="btn btn-info size_btn" href="#">Show</a> 
+			<%= link_to "Back", :back , class: "btn btn-default size_btn" %>  
+		</div>
+
+	</div>
+
+<% end %>
+
+<br/>
+
+
+

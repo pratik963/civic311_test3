@@ -1,0 +1,111 @@
+<%= render "admin/header" %>
+
+<% if @model_name.present? %>
+
+  <table class='table table-condensed table-striped'>
+
+    <thead>
+        <tr>
+          <th><%= check_box_tag "check_all", 'yes', false, :class => "check_all" %></th>
+          <% @column_name.each do |cn| %>
+            
+              <th><%= sortable "#{cn}", "#{cn.titleize}" %></th>
+           
+          <% end %> 
+          <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+    <% @model_data.each do |row| %>
+
+          <tr>
+          
+            <td>
+              <%= check_box_tag "row[]", row.id, false, :class => "check_row" %>
+            </td> 
+
+            <% @column_name.each do |column| %>
+            <td>
+
+                  <% if row["#{column}"].kind_of?(Date) || row["#{column}"].kind_of?(Time)%>
+                    <%= row["#{column}"].strftime("%B %d, %Y %H:%M") %>       
+
+                  <% else %>
+                    <%= row["#{column}"] %>
+
+                  <% end %>  
+
+            </td>
+
+            <% end %>
+
+            <td>
+              <% @tbl = params[:param1].present? ? params[:param1] : @temp_table[0][:table_name] %>
+              
+              <%= link_to "", "/admin/#{row["id"]}?name=#{@tbl}", {:class => "pjax glyphicon glyphicon-info-sign", :title => "Info"} %>
+
+              <%= link_to "", "/admin/#{row["id"]}/edit?name=#{@tbl}", {:class => "pjax glyphicon glyphicon-pencil", :style => "padding-left:7px;", :title => "Edit"} %>
+
+              <span style="padding-left:7px;"><%= link_to "", "/admin/#{row["id"]}?name=#{@tbl}", {:class => "pjax glyphicon glyphicon-remove", :style => "padding-left:7px;", :confirm => "Are you sure?", :method => "delete", :title => "Delete"} %></span>
+           </td>
+
+          </tr>
+           
+    <% end %> 
+    </tbody>
+
+  </table>
+
+<% else %>
+
+  <table class='table table-condensed table-striped'>
+
+    <thead>
+      <tr>
+        <% @column_name.each do |cn| %>
+        <th><%= cn.titleize %></th>
+        <% end %> 
+        <th></th>
+      </tr>
+    </thead>
+   
+    <tbody>
+      <% @column_data.each do |row| %>
+
+        <tr>
+
+          <% row.each do |column| %>
+          <td>
+              <% if column.kind_of?(Date) || column.kind_of?(Time)%>
+                  <%= column.strftime("%B %d, %Y %H:%M") %>
+              <% else %>
+                  <% if params[:param1] == "issues" %>
+                    <%= column %>
+                  <% else %>
+                    <%= column %>
+                  <% end %>
+              <% end %>
+          </td>
+          <% end %>
+
+          <td>
+            <% @tbl = params[:param1].present? ? params[:param1] : @temp_table[0][:table_name] %>
+              
+            <%= link_to "", "/admin/#{row[0]}?name=#{@tbl}", {:class => "pjax glyphicon glyphicon-info-sign", :title => "Info"} %>
+
+            <%= link_to "", "/admin/#{row[0]}/edit?name=#{@tbl}", {:class => "pjax glyphicon glyphicon-pencil", :style => "padding-left:7px;", :title => "Edit"} %>
+
+            <span style="padding-left:7px;"><%= link_to "", "/admin/#{row[0]}?name=#{@tbl}", {:class => "pjax glyphicon glyphicon-remove", :style => "padding-left:7px;", :confirm => "Are you sure?", :method => "delete", :title => "Delete"} %></span>
+          </td>
+
+        </tr>
+
+      <% end %>
+    </tbody>
+
+  </table> 
+
+<% end %>
+
+<%= paginate @column_data %>

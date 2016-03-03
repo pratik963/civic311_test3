@@ -1,0 +1,41 @@
+<!-- Nav tabs
+-->
+<ul class="nav nav-tabs">
+  <li class="active">
+    <%= link_to "Tab1", "#tab1", html_options = { "data-toggle" => "tab" } %>
+  </li>
+  <li>
+    <%= link_to "Tab2", "#tab2", html_options = { "data-toggle" => "tab" } %>
+  </li>
+  <li>
+    <%= link_to "Tab3", "#tab3", html_options = { "data-toggle" => "tab" } %>
+  </li>
+</ul>
+<!-- Tab panes
+-->
+<div class="tab-content">
+  <div class="tab-pane active" id="tab1">
+    <p>Fetch content</p>
+  </div>
+  <div class="tab-pane" id="tab2">
+    <ul class="nav nav-pills">
+      <li class="active">
+        <%= link_to 'Overview', "#overview", html_options = { "data-toggle" => "tab"} %>
+      </li>
+      <li>
+        <%= link_to 'Details', "#details", html_options = { "data-toggle" => "tab"} %>
+      </li>
+      <div class="tab-content">
+        <div class="tab-pane active" id="overview">
+          <p>Fetch overview</p>
+        </div>
+        <div class="tab-pane" id="details">
+          <p>Fetch details</p>
+        </div>
+      </div>
+    </ul>
+  </div>
+  <div class="tab-pane" id="tab3">
+    <p>Fetch content</p>
+  </div>
+</div>

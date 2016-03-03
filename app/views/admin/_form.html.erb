@@ -1,0 +1,184 @@
+<% @h.each do |k, v| %>
+
+	<% if params[:id].present? %>
+		<% data = ActiveRecord::Base.connection.execute("SELECT `#{k}` from #{params[:param2]} where id = #{params[:id]}").to_a  %>
+	<% end %>
+
+	<% if k == "id" %>
+		<% next %>
+	<% elsif k == "created_at" || k == "updated_at" %>
+		<%= f.label k,{:class => "col-sm-2 control-label hidden"},{:style => "padding-top:12px;"} %>
+	<% else %>
+		<%= f.label k,{:class => "col-sm-2 control-label"},{:style => "padding-top:12px;"} %>
+	<% end %>
+
+	<% val =  params[:id].present? ? data[0][0] : "" %>
+
+	<div class="col-sm-10 controls">		
+		
+		<% if "#{v}" == "datetime" %>
+
+			<div style="padding-top:8px;">	
+			<%= f.hidden_field k, :value => Time.now.strftime("%Y-%m-%d %H:%M:%S"), class: "form-control hidden" %><br/>
+			</div>
+			
+		<% elsif "#{v}" == "integer" && "#{k}" == "sharing_id" %>	
+			
+			<%
+			 @sharing_id = []
+			 @sharing_id = ActiveRecord::Base.connection.execute("SELECT id FROM sharings")
+			%>
+
+			<% if params[:id].present? %>
+
+				<% sharing = ActiveRecord::Base.connection.execute("SELECT sharing_id from #{params[:param2]} where id = #{params[:id]}").to_a  %>
+
+				<%= f.select k,options_for_select(@sharing_id, :selected => sharing[0]),{ :include_blank => 'Please Select'}, {class: "form-control"} %>
+
+			<% else %>
+
+				<%= f.select k,options_for_select(@sharing_id),{ :include_blank => 'Please Select'}, {class: "form-control"} %>
+
+			<% end %>	
+
+		<% elsif "#{v}" == "integer" && "#{k}" == "agent_id" %>
+
+			<% if params[:id].present? %>
+
+				<% agent = ActiveRecord::Base.connection.execute("SELECT agent_id from #{params[:param2]} where id = #{params[:id]}").to_a  %>
+
+				<%= f.select k, "agents".classify.constantize.all.collect {|d| [sanitize(d.name), d.id]}, { :selected => agent[0],:include_blank => 'Please Select'}, {class: "form-control"} %>
+			<% else %>
+
+				<%= f.select k, "agents".classify.constantize.all.collect {|d| [sanitize(d.name), d.id]},{ :include_blank => 'Please Select'}, {class: "form-control"} %>
+
+			<% end %>	
+
+		
+		<% elsif "#{v}" == "integer" && "#{k}" == "user_id" %>	
+
+			<%
+			 @user = []
+			 @user = ActiveRecord::Base.connection.execute("SELECT DISTINCT user_id FROM #{params[:param2]}")
+			%>
+
+			<% if params[:id].present? %>
+
+				<% uid = ActiveRecord::Base.connection.execute("SELECT DISTINCT user_id from #{params[:param2]} where id = #{params[:id]}").to_a  %>
+
+				<%= f.select k, "users".classify.constantize.all.collect {|d| [sanitize(d.email), d.id]}, { :selected => uid[0],:include_blank => 'Please Select'}, {class: "form-control"} %>	
+
+			<% else %>
+
+				<%= f.select k, "users".classify.constantize.all.collect {|d| [sanitize(d.email), d.id]},{ :include_blank => 'Please Select'}, {class: "form-control"} %>	
+			<% end %>
+
+
+		<% elsif "#{v}" == "integer" && "#{k}" == "designation_id" %>
+
+			<%
+			 @designation = []
+			 @designation = ActiveRecord::Base.connection.execute("SELECT DISTINCT designation_id FROM #{params[:param2]}")
+			%>
+
+			<% if params[:id].present? %>
+
+				<% did = ActiveRecord::Base.connection.execute("SELECT DISTINCT designation_id from #{params[:param2]} where id = #{params[:id]}").to_a  %>
+
+				<%= f.select k, "designations".classify.constantize.all.collect {|d| [sanitize(d.designation), d.id]},{ :selected => did[0], :include_blank => 'Please Select'}, {class: "form-control"} %>
+
+			<% else %>
+
+				<%= f.select k, "designations".classify.constantize.all.collect {|d| [sanitize(d.designation), d.id]},{ :include_blank => 'Please Select'}, {class: "form-control"} %>	
+
+			<% end %>	
+
+
+		<% elsif "#{v}" == "integer" && "#{k}" == "language_id" %>
+
+			<% if params[:id].present? %>
+
+				<% lid = ActiveRecord::Base.connection.execute("SELECT DISTINCT language_id from #{params[:param2]} where id = #{params[:id]}").to_a  %>
+
+				<%= f.select k, "languages".classify.constantize.all.collect {|d| [sanitize(d.name), d.id]},{ :selected => lid[0], :include_blank => 'Please Select'}, {class: "form-control"} %>
+
+			<% else %>
+
+				<%= f.select k, "languages".classify.constantize.all.collect {|d| [sanitize(d.name), d.id]},{ :include_blank => 'Please Select'}, {class: "form-control"} %>	
+
+			<% end %>	
+
+		<% elsif "#{v}" == "integer" && "#{k}" == "specialty_id" %>
+
+			<% if params[:id].present? %>
+
+				<% sid = ActiveRecord::Base.connection.execute("SELECT DISTINCT specialty_id from #{params[:param2]} where id = #{params[:id]}").to_a  %>
+
+				<%= f.select k, "specialties".classify.constantize.all.collect {|d| [sanitize(d.name), d.id]},{ :selected => sid[0], :include_blank => 'Please Select'}, {class: "form-control"} %>
+
+			<% else %>
+
+				<%= f.select k, "specialties".classify.constantize.all.collect {|d| [sanitize(d.name), d.id]},{ :include_blank => 'Please Select'}, {class: "form-control"} %>	
+
+			<% end %>		
+				
+
+		<% elsif "#{v}" == "string" && "#{k}" == "status" && params[:param2] != "agent_tickets" %>
+
+			<% if params[:id].present? %>
+
+				<% status = ActiveRecord::Base.connection.execute("SELECT status from #{params[:param2]} where id = #{params[:id]}").to_a  %>
+
+				<%= f.select k,options_for_select(@status_array.collect{|m| [m[:status], m[:id]]}, :selected => status[0]),{ :include_blank => 'Please Select' }, {class: "form-control"} %>
+
+			<% else %>
+
+				<%= f.select k,options_for_select(@status_array.collect{|m| [m[:status], m[:id]]}),{ :include_blank => 'Please Select'}, {class: "form-control"} %>
+
+			<% end %>
+
+
+		<% elsif "#{v}" == "integer" && "#{k}" == "property_type_id" %>
+
+			<% if params[:id].present? %>
+
+				<% ptypeid = ActiveRecord::Base.connection.execute("SELECT DISTINCT property_type_id from #{params[:param2]} where id = #{params[:id]}").to_a  %>
+
+				<%= f.select k, "property_type".classify.constantize.all.collect {|d| [sanitize(d.name), d.id]},{ :include_blank => 'Please Select'}, {class: "form-control"} %>				
+
+			<% else %>
+
+				<%= f.select k, "property_type".classify.constantize.all.collect {|d| [sanitize(d.name), d.id]},{:include_blank => 'Please Select'}, {class: "form-control"} %>
+				
+			<% end %>	
+
+		<% elsif "#{v}" == "string" && "#{k}" == "action" %>
+
+			<% if params[:id].present? %>
+
+				<% action = ActiveRecord::Base.connection.execute("SELECT action from #{params[:param2]} where id = #{params[:id]}").to_a  %>
+
+				<%= f.select k,options_for_select(@action_array.collect{|m| [m[:action], m[:id]]}, :selected => action[0]),{ :include_blank => 'Please Select' }, {class: "form-control"} %>
+
+			<% else %>
+
+				<%= f.select k,options_for_select(@action_array.collect{|m| [m[:action], m[:id]]}),{ :include_blank => 'Please Select'}, {class: "form-control"} %>
+
+			<% end %>							
+
+		<% elsif "#{v}" == "integer"%>
+			
+			<%= f.number_field k,{:class => "form-control", :value => val } %>
+			
+		<% else %> 
+
+			<%= f.text_field k,{:class => "form-control",:value => val }%>
+
+		<% end %>
+
+		<br />
+		<%= hidden_field_tag :hidden_one, "#{params[:param2]}" %>
+	</div>
+	
+<% end %>
+

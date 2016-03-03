@@ -1,0 +1,58 @@
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+<br/><br/>
+
+<h2 style="padding-top:10px;">List of <%= @table = params[:param1].present? ? params[:param1].titleize : @temp_table[0][:table_name].titleize %></h2>
+<hr />
+<ol class="breadcrumb"><li class="active"><a class="pjax" href="/admin/dashboard/">Dashboard</a> / <%= @table = params[:param1].present? ? params[:param1].titleize : @temp_table[0][:table_name].titleize %></li></ol>
+
+<ul class='nav nav-tabs'>
+
+    <li title="" rel="" class="icon index_collection_link active">
+        <%= link_to '<i class="glyphicon glyphicon-th-list"></i>&nbsp;List'.html_safe, root_path(:param1 => "#{params[:param1]}") , {:class => "pjax"} %>
+    </li>
+
+    <% params[:param1] = params[:param1].present? ? params[:param1] : @temp_table[0][:table_name] %>
+
+    <li title="" rel="" class="icon new_collection_link">
+      <%= link_to '<i class="glyphicon glyphicon-plus"></i>&nbsp;Add New'.html_safe, new_admin_path(:param2 => "#{params[:param1]}"), {:class => "pjax"} %>
+    </li>
+
+    <li title="" rel="" class="icon export_collection_link ">
+      <%= link_to '<i class="glyphicon glyphicon-share"></i>&nbsp;Export'.html_safe, export_admin_index_path(:param1 => "#{params[:param1]}"), {:class => "pjax"} %>
+    </li>
+
+    <li class="dropdown" style="float:right">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#">Selected items <b class="caret"></b></a>
+
+      <ul class="dropdown-menu" style="left:auto; right:0;">
+        <li><a href="#">Export selected Agent designations</a></li>
+
+        <li><a href="#">Delete selected Agent designations</a></li>
+      </ul>
+
+    </li>
+
+    <li class='dropdown' style='float:right'>
+        <a class='dropdown-toggle' data-toggle='dropdown' href='#'>
+        Add filter
+        <b class='caret'></b>
+        </a>
+
+        <ul class='dropdown-menu' id='filters' style='left:auto; right:0;'>
+          <% @column_name.each do |cn| %>
+            <li>
+              <a href='#'><%= cn.titleize %></a>
+            </li>
+          <% end %>
+        </ul>
+
+    </li>
+
+</ul> 
+
+<script>
+  jQuery(function($) {
+  
+  });
+</script>

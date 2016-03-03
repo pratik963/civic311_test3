@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AgentoDemo</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+</head>
+<body class="rails_admin">
+
+<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" data-toggle="collapse" data-target="#secondary-navigation" class="navbar-toggle collapsed">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a href="#" class="navbar-brand pjax">Agento<small>Admin</small></a>
+			</div>
+			<div id="secondary-navigation" class="collapse navbar-collapse">
+				<ul class="nav navbar-nav navbar-right root_links">
+					<li class="dashboard_root_link"><a href="/admin/dashboard/" class="pjax">Dashboard</a></li>
+					<li><a href="/admin/dashboard/">Home</a></li>
+					<li><a href="#"><span class="label label-danger">Log out</span></a></li>
+				</ul>
+			</div>
+		</div>
+</nav>	
+
+<div class="container-fluid">
+    <div class="row">
+
+       <%= render "layouts/sidebar" %>
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2" id="modal_page_content">
+
+        <%= yield %>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+
+</html>
+
